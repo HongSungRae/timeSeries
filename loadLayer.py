@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 
 
-
+'''
 class LoadCNN(nn.Module):
   def __init__(self, in_channels = 1, factor): # factor = ID + Month + Day + Week
     super().__init__()
@@ -21,7 +21,7 @@ class LoadCNN(nn.Module):
     x = x.reshape(x.shape[0],-1) # flatten
     x = self.linear(x)
     return x
-
+'''
 
 class CNN_channels(nn.Module):
   def __init__(self, in_channesl = 1):
@@ -32,7 +32,10 @@ class CNN_channels(nn.Module):
     self.dropout = nn.Dropout(p=.5)
 
   def forward(self,x):
-    return dropout(torch.cat([self.horizontal(x), self.vertical(x)]))
+    x1 = self.horizontal_channel(x)
+    x2 = self.vertical_channel(x)
+    x3 = torch.cat([x1,x2])
+    return self.dropout(x3)
 
 
 class horizontal(nn.Module):
@@ -41,13 +44,13 @@ class horizontal(nn.Module):
 
     self.conv1 = conv_block(in_channels=in_channels, out_channels = 16, kernel_size=(1,7))
     self.conv2 = conv_block(16, 24, kernel_size=(1,5))
-    self.maxPool1 = nn.MaxPool2d(kernel_size=(1,2))
+    self.maxPool1 = nn.MaxPool2d(kernel_size=(1,2),stride=(1,1))
     self.conv3 = conv_block(24, 24, kernel_size =(1,5))
-    self.maxPool2 = nn.MaxPool2d(kernel_size=(1,2))
+    self.maxPool2 = nn.MaxPool2d(kernel_size=(1,2),stride=(1,1))
     self.conv4 = conv_block(24, 64, kernel_size =(1,4))
-    self.maxPool3 = nn.MaxPool2d(kernel_size=(2,1))
+    self.maxPool3 = nn.MaxPool2d(kernel_size=(2,1),stride=(1,1))
     self.conv5 = conv_block(64, 64, kernel_size =(1,3))
-    self.maxPool4 = nn.MaxPool2d(kernel_size=(2,1))
+    self.maxPool4 = nn.MaxPool2d(kernel_size=(2,1),stride=(1,1))
     self.conv6 = conv_block(64, 64, kernel_size =(1,3))
 
   def forward(self,x):
@@ -68,13 +71,13 @@ class vertical(nn.Module):
   def __init__(self, in_channels = 1):
     super().__init__()
 
-    self.conv1 = conv_block(in_channels=in_channels, out_channels=16, kernel_size=(4,1))
+    self.conv1 = conv_block(in_channels=in_channels, out_channels=16, kernel_size=(4,1),padding=(8,29))
     self.maxPool1 = nn.MaxPool2d(kernel_size=(1,2))
     self.conv2 = conv_block(16, 24, kernel_size=(4,1))
     self.maxPool2 = nn.MaxPool2d(kernel_size=(1,2))
     self.conv3 = conv_block(24, 24, kernel_size=(3,1))
     self.conv4 = conv_block(24, 64, kernel_size=(3,1))
-    self.maxPool3 = nn.MaxPool2d(kernel_size=(1,2))
+    self.maxPool3 = nn.MaxPool2d(kernel_size=(1,2),stride=(1,1))
     self.conv5 = conv_block(64, 64, kernel_size=(2,1))
     self.maxPool4 = nn.MaxPool2d(kernel_size=(2,1))
     self.conv6 = conv_block(64, 64, kernel_size=(2,1))
@@ -103,6 +106,15 @@ class conv_block(nn.Module):
     return self.relu(self.conv(x))
 
 
+
+
 if __name__ == "__main__":
-    net = CNN_channels().cuda()
-    summary(net,input_size=(1,7,48))
+    net_horizon = horizontal().cuda()
+    summary(net_horizon,input_size=(1,7,48))
+
+    net_vertical = vertical().cuda()
+    summary(net_vertical,input_size=(1,7,48))
+
+    net_horANDver = CNN_channels().cuda()
+    summary(net_horANDver,input_size=(1,7,48))
+    
