@@ -110,6 +110,7 @@ class conv_block(nn.Module):
 
 
 if __name__ == "__main__":
+    '''
     net_horizon = horizontal().cuda()
     print('======== Horizontal Network ========')
     summary(net_horizon,input_size=(1,7,48))
@@ -121,7 +122,8 @@ if __name__ == "__main__":
     net_horANDver = CNN_channels().cuda()
     print('======== Hor + Ver Network ========')
     summary(net_horANDver,input_size=(1,7,48))
-
+    '''
+    
     net = LoadCNN().cuda()
     print('======## LoadCNN Network ##======')
     summary(net,input_size=(1,7,48))
