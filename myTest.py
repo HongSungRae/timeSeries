@@ -8,7 +8,7 @@ import torch
 
 from dataProcess import *
 
-
+'''
 df = loadData("/daintlab/data/sr/df_timeSeries.csv")
 
 
@@ -20,7 +20,7 @@ print(df.head())
 print(df.iloc[0:,534*48:])
 
 print(df.iloc[0:,534*48:].columns[1])
-
+'''
 '''
 for i in df.index:
     if df.loc[i,'24601':'24648'].isnull().values.any()==True:
@@ -48,3 +48,18 @@ print('One',summ(2,4))
 print('Two',summ(a=3))
 '''
 
+'''
+from datetime import datetime, timedelta
+
+time1 = datetime(2018, 7, 13)
+time2 = datetime.now()
+print(time1.weekday()) # 2018-07-13 00:00:00
+
+print(getMWDtensor(19501))
+'''
+
+
+a = getMWDtensor(19501)
+b = getIDtensor(905)
+print(a,b)
+print(torch.cat([a,b]).size())

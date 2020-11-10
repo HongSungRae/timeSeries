@@ -31,18 +31,23 @@ class customDataLoader(Dataset):
             start = np.random.randint(start,self.end-8*48) # 적어도 뒤에 8일은 있어야한다
             candidate = self.df.iloc[idx,start:start+48*8]
             if candidate.isnull().values.any()==False: #8일동안 결측치 없으면
-                MWD = candidate.columns[48*4]
+                date = candidate.columns[48*4]
                 x = torch.zeros([1,7,48]).cuda()
                 y = torch.zeros([1,1,48]).cuda()
+                for i in range(7):
+                    # 7일치 x에 넣어주고
+                    pass
+                # 하루치 y에 넣어준다
                 
                 ID = getIDtensor(idx)
-                MWD = getMWD(MWD)
-                #위 두개 섞어서 factor
+                MWD = getMWDtensor(date)
+                factor = torch.cat([ID,MWD]) # 5x31 이걸 5x25짜리랑 어떻게 concat할까...
+                #!!!factor reshape해줘야합니다!!!
                 break
             else:
                 continue
  
-        return x,y,factor
+        return x, y, factor
 
 
 

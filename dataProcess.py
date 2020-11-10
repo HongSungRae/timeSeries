@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import torch
+from datetime import timedelta, datetime
 
 
 def loadData(data): # !! it makes first col to row name !!
@@ -97,16 +98,27 @@ def renameRow(df): # rename index from 1 to 929
 
 
 def getIDtensor(id): # customer id to 31by 2 tensor
-  IDtensor = torch.zeros([31,2])
+  IDtensor = torch.zeros([2,31])
   left = id // 31
   right = id % 31
-  IDtensor[left,0] = 1
-  IDtensor[right,1] = 1
+  IDtensor[0,left] = 1
+  IDtensor[1,right] = 1
   return IDtensor
 
-def getFactor(timestep): # returns Month Week Dat facor tensor
-  pass
-  return 'pass'
+
+
+def getMWDtensor(timestep): # returns Month Week Dat facor tensor
+  day_0 = datetime(2009,7,1) # day 0 = 1st, July, 2009
+  day_target = (timestep//100) - 195
+  day = day_0 + timedelta(days=day_target)
+  M = day.month 
+  W = day.isoweekday() # Monday:Sunday == 1:7
+  D = day.day
+  MWDtensor = torch.zeros([3,31])
+  MWDtensor[0,M-1] = 1
+  MWDtensor[1,W-1] = 1
+  MWDtensor[2,D-1] = 1
+  return MWDtensor
 
 
 
@@ -118,4 +130,5 @@ def testFunc(number): # toyCode for testing
 
 
 if __name__=="__main__":
+  """Test whatever you want"""
   pass
