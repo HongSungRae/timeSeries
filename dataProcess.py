@@ -104,6 +104,9 @@ def getIDtensor(id): # customer id to 31by 2 tensor
   IDtensor[right,1] = 1
   return IDtensor
 
+def getFactor(timestep): # returns Month Week Dat facor tensor
+  pass
+  return 'pass'
 
 
 

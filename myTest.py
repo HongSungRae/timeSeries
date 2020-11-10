@@ -8,15 +8,18 @@ import torch
 
 from dataProcess import *
 
-'''
-df = loadData("/daintlab/data/sr/df_timeSeries.csv")
-'''
 
-#df = renameCol(df)
-#df = renameRow(df)
+df = loadData("/daintlab/data/sr/df_timeSeries.csv")
+
+
+df = renameCol(df)
+df = renameRow(df)
 #Hi
 
-#print(df.head())
+print(df.head())
+print(df.iloc[0:,534*48:])
+
+print(df.iloc[0:,534*48:].columns[1])
 
 '''
 for i in df.index:
@@ -33,7 +36,15 @@ for i in df.index:
 #print(getIDtensor(1))
 #print(8064/64)
 
-
+'''
 a = torch.zeros([2,64,5,25])
 b = torch.zeros([2,2,5,25])
 print(torch.cat([a,b],dim=1).size())
+
+def summ(a,b=10):
+    return a+b
+
+print('One',summ(2,4))
+print('Two',summ(a=3))
+'''
+
