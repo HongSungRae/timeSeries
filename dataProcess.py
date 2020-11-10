@@ -111,3 +111,8 @@ def testFunc(number): # toyCode for testing
   if number<0:
     raise ValueError
   return ("even" if number%2==0 else "odd")
+
+
+
+if __name__=="__main__":
+  pass

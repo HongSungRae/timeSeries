@@ -6,22 +6,23 @@ import pandas as pd
 import numpy as np
 
 
-'''
+
 class LoadCNN(nn.Module):
-  def __init__(self, in_channels = 1, factor): # factor = ID + Month + Day + Week
+  def __init__(self, in_channels = 1,factor=torch.zeros([2,1,5,25]).cuda()): # factor = ID + Month + Day + Week
     super().__init__()
 
     self.factor = factor
     self.CNN_channels = CNN_channels()
-    self.linear = nn.Linear(in_features=1024,out_features=48)
+    self.linear = nn.Linear(in_features=32250,out_features=48)
 
   def forward(self,x):
     x = self.CNN_channels(x)
-    x = torch.cat(x,self,factor)
-    x = x.reshape(x.shape[0],-1) # flatten
+    x = torch.cat([x,self.factor],dim=1)
+    #x = x.reshape(x.shape[0],-1) # flatten
+    x = torch.flatten(x)
     x = self.linear(x)
     return x
-'''
+
 
 class CNN_channels(nn.Module):
   def __init__(self, in_channesl = 1):
@@ -34,8 +35,8 @@ class CNN_channels(nn.Module):
   def forward(self,x):
     x1 = self.horizontal_channel(x)
     x2 = self.vertical_channel(x)
-    x3 = torch.cat([x1,x2])
-    return self.dropout(x3)
+    x = torch.cat([x1,x2],dim=1)
+    return self.dropout(x)
 
 
 class horizontal(nn.Module):
@@ -110,11 +111,17 @@ class conv_block(nn.Module):
 
 if __name__ == "__main__":
     net_horizon = horizontal().cuda()
+    print('======== Horizontal Network ========')
     summary(net_horizon,input_size=(1,7,48))
 
     net_vertical = vertical().cuda()
+    print('======== Vertical Network ========')
     summary(net_vertical,input_size=(1,7,48))
 
     net_horANDver = CNN_channels().cuda()
+    print('======== Hor + Ver Network ========')
     summary(net_horANDver,input_size=(1,7,48))
-    
+
+    net = LoadCNN().cuda()
+    print('======## LoadCNN Network ##======')
+    summary(net,input_size=(1,7,48))
