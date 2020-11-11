@@ -29,18 +29,20 @@ class customDataLoader(Dataset):
         while True:
             start = 0
             start = np.random.randint(start,self.end-8*48) # 적어도 뒤에 8일은 있어야한다
-            candidate = self.df.iloc[idx,start:start+48*8]
+            candidate = self.df.iloc[idx,start:start+48*8].to_frame().transpose()
+
             if candidate.isnull().values.any()==False: #8일동안 결측치 없으면
                 date = candidate.columns[48*4]
                 x = torch.zeros([1,7,48]).cuda()
                 y = torch.zeros([1,1,48]).cuda()
                 for i in range(7):
-                    # 7일치 x에 넣어주고
-                    pass
-                # 하루치 y에 넣어준다
+                    for k in range(48):
+                        x[0,i,k] = candidate.iloc[0,i*48+k]
+                for j in range(48):
+                    y[0,0,j] = candidate.iloc[0,(8-1)*48+j]
                 
-                ID = getIDtensor(idx)
-                MWD = getMWDtensor(date)
+                ID = getIDtensor(idx+1)
+                MWD = getMWDtensor(date.tolist())
                 factor = torch.cat([ID,MWD]) # 5x31 이걸 5x25짜리랑 어떻게 concat할까...
                 #!!!factor reshape해줘야합니다!!!
                 break
@@ -62,7 +64,23 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset, shuffle=True, batch_size=64, pin_memory=False)
     test_loader = DataLoader(test_dataset, shuffle=False, batch_size=64, pin_memory=False)
     
+    
     x, y, factor = next(iter(train_loader))
-    print("======== input ========\n",x)
-    print("======== target ========\n",y)
-    print("======== factor ========\n",factor)
+    print("======== input ========\n",x,"\n",x.size())
+    print("======== target ========\n",y,"\n",y.size())
+    print("======== factor ========\n",factor,"\n",factor.size())
+
+
+    print("input tensor :",x.size())
+    print("target tensor :",y.size())
+    print("factor tensor :",factor.size())
+    '''
+
+    for batch_idx, samples in enumerate(test_loader):
+        x, y, factor = samples
+        print(batch_idx)
+        print(x)
+        print(y)
+        print(factor)
+        break
+    '''

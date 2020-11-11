@@ -8,7 +8,7 @@ import torch
 
 from dataProcess import *
 
-'''
+
 df = loadData("/daintlab/data/sr/df_timeSeries.csv")
 
 
@@ -17,10 +17,10 @@ df = renameRow(df)
 #Hi
 
 print(df.head())
-print(df.iloc[0:,534*48:])
+print(type(df.iloc[0:,534*48:]))
 
 print(df.iloc[0:,534*48:].columns[1])
-'''
+
 '''
 for i in df.index:
     if df.loc[i,'24601':'24648'].isnull().values.any()==True:
@@ -58,8 +58,13 @@ print(time1.weekday()) # 2018-07-13 00:00:00
 print(getMWDtensor(19501))
 '''
 
-
+'''
 a = getMWDtensor(19501)
 b = getIDtensor(905)
 print(a,b)
 print(torch.cat([a,b]).size())
+
+
+print(torch.zeros([1,3,5]))
+print(torch.zeros([3,5]))
+'''
