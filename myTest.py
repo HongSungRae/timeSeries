@@ -2,6 +2,7 @@
 ### This is a dummy code for practice ###
 #########################################
 
+'''
 import pandas as pd
 import numpy as np
 import torch
@@ -21,6 +22,7 @@ print(type(df.iloc[0:,534*48:]))
 
 print(df.iloc[0:,534*48:].columns[1])
 
+'''
 '''
 for i in df.index:
     if df.loc[i,'24601':'24648'].isnull().values.any()==True:
@@ -67,4 +69,33 @@ print(torch.cat([a,b]).size())
 
 print(torch.zeros([1,3,5]))
 print(torch.zeros([3,5]))
+'''
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torchsummary import summary
+
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels=1,out_channels=3,kernel_size=(2,2))
+        self.conv2 = nn.Conv2d(in_channels=6,out_channels=3,kernel_size=(2,2))
+
+    def forward(self, x,xx = torch.zeros([2,3,4,4]).cuda()):
+        #print(x.shape) # torch.Size([2,1,5,5])
+        #print(x)
+        x = self.conv1(x)
+        print(x.shape)
+        x = torch.cat([x,xx],dim=1)
+        x = self.conv2(x)
+        return x
+'''
+if __name__=="__main__":
+    net = Net().cuda()
+    dummy = torch.zeros([1,1,5,5]).cuda()
+    out = net(dummy)
+    print(out)
+    print(out.shape)
+    #summary(net,(1,5,5))
 '''

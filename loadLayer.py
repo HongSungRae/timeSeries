@@ -11,20 +11,20 @@ class LoadCNN(nn.Module):
   def __init__(self, in_channels = 1): # factor = ID + Month + Day + Week
     super().__init__()
 
-    self.CNN_channels = CNN_channels()
-    self.linear = nn.Linear(in_features=32250,out_features=48)
+    self.cnn_channels = CNN_channels()
+    self.linear = nn.Linear(in_features=16125,out_features=48)
 
   def forward(self,x,factor=torch.zeros([2,1,5,25]).cuda()):
-    x = self.CNN_channels(x)
+    x = self.cnn_channels(x)
     x = torch.cat([x,factor],dim=1)
-    #x = x.reshape(x.shape[0],-1) # flatten
-    x = torch.flatten(x)
+    x = x.reshape(x.shape[0],-1) # flatten
+    # x = torch.flatten(x) # 이게 왜 바로 위의 코드와 다르게 작동하는지 조사하고 정리해보자
     x = self.linear(x)
     return x
 
 
 class CNN_channels(nn.Module):
-  def __init__(self, in_channesl = 1):
+  def __init__(self):
     super().__init__()
 
     self.horizontal_channel = horizontal()
@@ -35,6 +35,7 @@ class CNN_channels(nn.Module):
     x1 = self.horizontal_channel(x)
     x2 = self.vertical_channel(x)
     x = torch.cat([x1,x2],dim=1)
+
     return self.dropout(x)
 
 
@@ -97,7 +98,7 @@ class vertical(nn.Module):
 
 
 class conv_block(nn.Module):
-  def __init__(self, in_channels, out_channels, **kwargs): # nn.conv2d의 나머지 파라메타도 그대로 가져다 쓰겠다
+  def __init__(self, in_channels, out_channels, **kwargs):
     super().__init__()
     self.relu = nn.ReLU()
     self.conv = nn.Conv2d(in_channels,out_channels,**kwargs)
@@ -113,16 +114,23 @@ if __name__ == "__main__":
     net_horizon = horizontal().cuda()
     print('======== Horizontal Network ========')
     summary(net_horizon,input_size=(1,7,48))
-
+    
     net_vertical = vertical().cuda()
     print('======== Vertical Network ========')
     summary(net_vertical,input_size=(1,7,48))
-
+    
     net_horANDver = CNN_channels().cuda()
     print('======== Hor + Ver Network ========')
     summary(net_horANDver,input_size=(1,7,48))
     '''
 
+    '''
     net = LoadCNN().cuda()
     print('======## LoadCNN Network ##======')
     summary(net,input_size=(1,7,48))
+    '''
+    net = LoadCNN().cuda()
+    dummy_x = torch.randn(64,1,7,48).cuda()
+    dummy_factor = torch.randn(64,1,5,25).cuda()
+    print(net(dummy_x,dummy_factor).shape)
+    
