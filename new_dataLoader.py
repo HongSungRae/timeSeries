@@ -31,14 +31,7 @@ class customDataLoader(Dataset):
         return len(self.new_df)
     
     def __getitem__(self,idx):
-        x
-        y
-        
-        date = self.new_df.columns[48*4]//100
-        ID = getIDtensor(idx+1)
-        MWD = getMWDtensor(date.tolist())
-        factor = torch.cat([ID,MWD]) # 5x31 이걸 5x25짜리랑 어떻게 concat할까...
-                #!!!factor reshape해줘야합니다!!!
+        factor = getFactorTensor(idx+1,timestep)
 
         return x, y, factor
 

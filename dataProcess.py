@@ -114,11 +114,20 @@ def getMWDtensor(timestep): # returns Month Week Dat facor tensor
   M = day.month 
   W = day.isoweekday() # Monday:Sunday == 1:7
   D = day.day
-  MWDtensor = torch.zeros([3,31])
+  MWDtensor = torch.zeros([1,63])
   MWDtensor[0,M-1] = 1
-  MWDtensor[1,W-1] = 1
-  MWDtensor[2,D-1] = 1
+  MWDtensor[0,12+W-1] = 1
+  MWDtensor[0,19+D-1] = 1
   return MWDtensor
+
+
+def getFactorTensor(id,timestep):
+  ID = getIDtensor(id).view([1,62])
+  MWD = getMWDtensor(timestep)
+  factor = torch.cat([ID,MWD],dim=1)
+  factor = factor.view([1,5,25])
+
+  return factor
 
 
 
@@ -131,4 +140,6 @@ def testFunc(number): # toyCode for testing
 
 if __name__=="__main__":
   """Test whatever you want"""
+  print(getFactorTensor(123,330).shape)
+  print(getFactorTensor(123,330))
   pass

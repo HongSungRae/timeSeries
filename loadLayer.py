@@ -18,7 +18,7 @@ class LoadCNN(nn.Module):
     x = self.cnn_channels(x)
     x = torch.cat([x,factor],dim=1)
     x = x.reshape(x.shape[0],-1) # flatten
-    # x = torch.flatten(x) # 이게 왜 바로 위의 코드와 다르게 작동하는지 조사하고 정리해보자
+    # x = torch.flatten(x)
     x = self.linear(x)
     return x
 
@@ -124,13 +124,13 @@ if __name__ == "__main__":
     summary(net_horANDver,input_size=(1,7,48))
     '''
 
-    '''
     net = LoadCNN().cuda()
     print('======## LoadCNN Network ##======')
     summary(net,input_size=(1,7,48))
+    
     '''
     net = LoadCNN().cuda()
     dummy_x = torch.randn(64,1,7,48).cuda()
     dummy_factor = torch.randn(64,1,5,25).cuda()
     print(net(dummy_x,dummy_factor).shape)
-    
+    '''
