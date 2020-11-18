@@ -10,6 +10,7 @@ if __name__ == "__main__":
     df = renameCol(df)
     df = renameRow(df)
 
+
     net = LoadCNN().cuda()
     
     trainDataLoader = customDataLoader(df,'train')
