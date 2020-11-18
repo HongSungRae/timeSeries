@@ -23,7 +23,7 @@ class myDataLoader(Dataset):
     def __getitem__(self,index):
         x = torch.tensor(self.df.iloc[index,0*48:7*48]).view(1,7,48)
         y = torch.tensor(self.df.iloc[index,7*48:8*48]).view(1,1,48)
-        factor = getFactorTensor(self.id_list[index],self.timestep_list[index])
+        factor = getFactorTensor(self.id_list[index].tolist(),self.timestep_list[index].tolist())
 
         return x, y, factor
 
