@@ -30,12 +30,25 @@ class myDataLoader(Dataset):
 
 
 if __name__ == "__main__":
-    df_test = df_test = pd.read_csv("/daintlab/data/sr/testdf.csv",index_col=0)
+    df_test = pd.read_csv("/daintlab/data/sr/testdf.csv",index_col=0)
     
     test_dataset = myDataLoader(df_test)
     test_loader = DataLoader(test_dataset, shuffle=False, batch_size=64, pin_memory=False)
 
     x, y, factor = next(iter(test_loader))
+
+    print("x :",x.shape)
+    print("y :",y.shape)
+    print("factor :",factor.shape)
+
+    #================================================================================#
+
+    df_train = pd.read_csv("/daintlab/data/sr/traindf.csv",index_col=0)
+
+    train_dataset = myDataLoader(df_train)
+    train_loader = DataLoader(train_dataset, shuffle=False, batch_size=64, pin_memory=False)
+
+    x, y, factor = next(iter(train_loader))
 
     print("x :",x.shape)
     print("y :",y.shape)

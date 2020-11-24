@@ -8,13 +8,14 @@ import numpy as np
 
 
 class LoadCNN(nn.Module):
-  def __init__(self, in_channels = 1): # factor = ID + Month + Day + Week
+  def __init__(self, in_channels = 1):
     super().__init__()
 
     self.cnn_channels = CNN_channels()
     self.linear = nn.Linear(in_features=16125,out_features=48)
 
-  def forward(self,x,factor=torch.zeros([2,1,5,25]).cuda()):
+
+  def forward(self,x,factor=torch.zeros([2,1,5,25]).cuda()): # factor = ID + Month + Day + Week
     x = self.cnn_channels(x)
     x = torch.cat([x,factor],dim=1)
     x = x.reshape(x.shape[0],-1) # flatten
