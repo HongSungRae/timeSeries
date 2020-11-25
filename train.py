@@ -12,20 +12,22 @@ from loss import *
 
 
 
-def train(model,train_loader,epoch):
+def train(model,train_loader,test_loader,epoch):
     is_cuda = torch.cuda.is_available()
     device = torch.device('cuda' if is_cuda else 'cpu')
 
-    model = model
+    # model = model
     optimizer = optim.SGD(model.parameters(),lr=1e-3)
     # criterion = nn.??
     epochs = epoch
-    total_batch = len(train_loader) # 7132
+    total_batch = len(train_loader)
     print('total batch :',total_batch)
 
     train_loss_list = []
+    test_loss_list = []
 
     for eph in range(epochs):
+        print('epoch / epochs = {} / {}'.format(eph+1,epochs))
         loss_learning = 0.0
         for i,data in enumerate(train_loader):
             x, target, factor = data
@@ -52,8 +54,19 @@ def train(model,train_loader,epoch):
                 train_loss_list.append(loss_learning/1000)
                 loss_learning = 0.0
 
+            if i == total_batch-1:
+                x, target, factor = next(iter(test_loader))
+                if is_cuda:
+                    x = x.float().cuda()
+                    target = target.float().cuda()
+                    factor = factor.float().cuda()
+                y_hat = model(x,factor)
+                loss = predictionLoss(y_hat,target)
+                test_loss_list.append(loss)
+
+
     print('Finished Training')
-    return model, train_loss_list
+    return model, train_loss_list, test_loss_list
 
 
 
@@ -62,12 +75,18 @@ if __name__ == "__main__":
     df_train = pd.read_csv("/daintlab/data/sr/traindf.csv",index_col=0)
 
     train_dataset = myDataLoader(df_train)
-    train_loader = DataLoader(train_dataset, shuffle=False, batch_size=128, pin_memory=False)
+    train_loader = DataLoader(train_dataset, shuffle=False, batch_size=64, pin_memory=False)
+
+    df_test = pd.read_csv("/daintlab/data/sr/testdf.csv",index_col=0)
+
+    test_dataset = myDataLoader(df_test)
+    test_loader = DataLoader(test_dataset, shuffle=True, batch_size=64, pin_memory=False)
 
     model = LoadCNN().cuda()
-    trained_model, train_loss_list = train(model,train_loader,20)
+    trained_model, train_loss_list, test_loss_list = train(model,train_loader,test_loader,20)
 
     print(train_loss_list)
+    print(test_loss_list)
 
     PATH = '/daintlab/data/sr/'
     torch.save(trained_model, PATH + 'LoadCNNmodel.pt')
