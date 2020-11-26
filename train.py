@@ -16,7 +16,7 @@ def train(model,train_loader,test_loader,epoch):
     is_cuda = torch.cuda.is_available()
     device = torch.device('cuda' if is_cuda else 'cpu')
 
-    # model = model
+    net = model
     optimizer = optim.SGD(model.parameters(),lr=1e-3)
     # criterion = nn.??
     epochs = epoch
@@ -37,8 +37,7 @@ def train(model,train_loader,test_loader,epoch):
                 factor = factor.float().cuda()
             
             optimizer.zero_grad()
-            y_hat = model(x,factor)
-
+            y_hat = net(x,factor)
             loss = predictionLoss(y_hat, target)
             loss.backward()
             optimizer.step()
@@ -49,24 +48,26 @@ def train(model,train_loader,test_loader,epoch):
             #del y_hat
            
             if i % 1000 == 999:    # print every 1000 mini-batches
-                print('[%d, %5d] loss: %.3f' %
-                      (eph + 1, i + 1, loss_learning / 1000))
-                train_loss_list.append(loss_learning/1000)
-                loss_learning = 0.0
+                print('[epoch : %d, iter : %5d] loss: %.3f' %
+                      (eph + 1, i + 1, loss_learning / (i+1)))
 
-            if i == total_batch-1:
-                x, target, factor = next(iter(test_loader))
-                if is_cuda:
-                    x = x.float().cuda()
-                    target = target.float().cuda()
-                    factor = factor.float().cuda()
-                y_hat = model(x,factor)
-                loss = predictionLoss(y_hat,target)
-                test_loss_list.append(loss)
+            if i == total_batch-1: # 마지막 미니배치
+                with torch.no_grad():
+                    x, target, factor = next(iter(test_loader))
+                    if is_cuda:
+                        x = x.float().cuda()
+                        target = target.float().cuda()
+                        factor = factor.float().cuda()
+                    y_hat = net(x,factor)
+                    loss = predictionLoss(y_hat,target)
+                    test_loss_list.append(loss)
+
+                    train_loss_list.append(loss_learning/total_batch)
+                    loss_learning = 0.0
 
 
     print('Finished Training')
-    return model, train_loss_list, test_loss_list
+    return net, train_loss_list, test_loss_list
 
 
 
