@@ -13,12 +13,13 @@ from loss import *
 
 
 def train(model,train_loader,test_loader,epoch):
-    is_cuda = torch.cuda.is_available()
-    device = torch.device('cuda' if is_cuda else 'cpu')
+    is_cuda = torch.cuda.is_available() # True or False
+    device = torch.device('cuda' if is_cuda else 'cpu') 
 
     net = model
-    optimizer = optim.SGD(model.parameters(),lr=1e-3)
-    # criterion = nn.??
+    optimizer = optim.SGD(net.parameters(),lr=1e-3)
+    #criterion = nn.MSELoss()
+    #eps = 1e-6
     epochs = epoch
     total_batch = len(train_loader)
     print('total batch :',total_batch)
@@ -38,6 +39,8 @@ def train(model,train_loader,test_loader,epoch):
             
             optimizer.zero_grad()
             y_hat = net(x,factor)
+            #y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
+            #loss = torch.sqrt(criterion(target, y_hat) + eps)
             loss = predictionLoss(y_hat, target)
             loss.backward()
             optimizer.step()
@@ -46,12 +49,14 @@ def train(model,train_loader,test_loader,epoch):
 
             #del loss
             #del y_hat
+            #print(torch.sum(net.linear.weight))
            
-            if i % 1000 == 999:    # print every 1000 mini-batches
+            if i % 100 == 99:    # print every 1000 mini-batches
                 print('[epoch : %d, iter : %5d] loss: %.3f' %
                       (eph + 1, i + 1, loss_learning / (i+1)))
+                print(torch.sum(net.linear.weight))
 
-            if i == total_batch-1: # 마지막 미니배치
+            if i == 1000: # total_batch-1
                 with torch.no_grad():
                     x, target, factor = next(iter(test_loader))
                     if is_cuda:
@@ -62,9 +67,10 @@ def train(model,train_loader,test_loader,epoch):
                     loss = predictionLoss(y_hat,target)
                     test_loss_list.append(loss)
 
-                    train_loss_list.append(loss_learning/total_batch)
+                    train_loss_list.append(loss_learning/1000)#total_batch
                     loss_learning = 0.0
-
+                break
+            
 
     print('Finished Training')
     return net, train_loss_list, test_loss_list
@@ -76,15 +82,15 @@ if __name__ == "__main__":
     df_train = pd.read_csv("/daintlab/data/sr/traindf.csv",index_col=0)
 
     train_dataset = myDataLoader(df_train)
-    train_loader = DataLoader(train_dataset, shuffle=False, batch_size=64, pin_memory=False)
+    train_loader = DataLoader(train_dataset, shuffle=True, batch_size=64, pin_memory=True)
 
     df_test = pd.read_csv("/daintlab/data/sr/testdf.csv",index_col=0)
 
     test_dataset = myDataLoader(df_test)
-    test_loader = DataLoader(test_dataset, shuffle=True, batch_size=64, pin_memory=False)
+    test_loader = DataLoader(test_dataset, shuffle=True, batch_size=64, pin_memory=True)
 
     model = LoadCNN().cuda()
-    trained_model, train_loss_list, test_loss_list = train(model,train_loader,test_loader,20)
+    trained_model, train_loss_list, test_loss_list = train(model,train_loader,test_loader,5)
 
     print(train_loss_list)
     print(test_loss_list)
