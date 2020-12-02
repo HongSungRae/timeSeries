@@ -56,19 +56,25 @@ def train(model,train_loader,test_loader,epoch):
                       (eph + 1, i + 1, loss_learning / (i+1)))
                 print(torch.sum(net.linear.weight))
 
-            if i == 1000: # total_batch-1
+            if i == 999: # total_batch-1
+                train_loss_list.append(loss_learning.item()/1000)#total_batch
+                loss_learning = 0.0
+                
                 with torch.no_grad():
-                    x, target, factor = next(iter(test_loader))
-                    if is_cuda:
-                        x = x.float().cuda()
-                        target = target.float().cuda()
-                        factor = factor.float().cuda()
-                    y_hat = net(x,factor)
-                    loss = predictionLoss(y_hat,target)
-                    test_loss_list.append(loss)
-
-                    train_loss_list.append(loss_learning/1000)#total_batch
-                    loss_learning = 0.0
+                    loss_test = 0.0
+                    for j,data in enumerate(test_loader):
+                        x, target, factor = data
+                        if is_cuda:
+                            x = x.float().cuda()
+                            target = target.float().cuda()
+                            factor = factor.float().cuda()
+                        y_hat = net(x,factor)
+                        loss = predictionLoss(y_hat,target)
+                        loss_test += loss
+                        
+                        if j==9:
+                            test_loss_list.append(loss_test.item()/10)
+                            break
                 break
             
 
@@ -90,7 +96,7 @@ if __name__ == "__main__":
     test_loader = DataLoader(test_dataset, shuffle=True, batch_size=64, pin_memory=True)
 
     model = LoadCNN().cuda()
-    trained_model, train_loss_list, test_loss_list = train(model,train_loader,test_loader,5)
+    trained_model, train_loss_list, test_loss_list = train(model,train_loader,test_loader,10)
 
     print(train_loss_list)
     print(test_loss_list)
