@@ -17,7 +17,7 @@ def train(model,train_loader,test_loader,epoch):
     device = torch.device('cuda' if is_cuda else 'cpu') 
 
     net = model
-    optimizer = optim.SGD(net.parameters(),lr=1e-3)
+    optimizer = optim.SGD(net.parameters(),lr=1e-2)
     #criterion = nn.MSELoss()
     #eps = 1e-6
     epochs = epoch

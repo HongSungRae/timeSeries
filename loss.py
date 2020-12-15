@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-#from torch.autograd import Variable
+from torch.autograd import Variable
 
 
 
@@ -53,3 +53,6 @@ if __name__ == "__main__":
     print(loss)
     print(loss.shape)
     print(loss.requires_grad)
+
+    a = torch.zeros([1,7,7],device='cuda')
+    print(a)
