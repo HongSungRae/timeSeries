@@ -18,8 +18,8 @@ def train(model,train_loader,test_loader,epoch):
 
     net = model
     optimizer = optim.SGD(net.parameters(),lr=1e-2)
-    #criterion = nn.MSELoss()
-    #eps = 1e-6
+    criterion = nn.MSELoss()
+    eps = 1e-6
     epochs = epoch
     total_batch = len(train_loader)
     print('total batch :',total_batch)
@@ -39,9 +39,9 @@ def train(model,train_loader,test_loader,epoch):
             
             optimizer.zero_grad()
             y_hat = net(x,factor)
-            #y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
-            #loss = torch.sqrt(criterion(target, y_hat) + eps)
-            loss = predictionLoss(y_hat, target)
+            y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
+            loss = torch.sqrt(criterion(target, y_hat) + eps)
+            #loss = predictionLoss(y_hat, target)
             loss.backward()
             optimizer.step()
 

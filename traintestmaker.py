@@ -15,7 +15,8 @@ def mkTraindata(df,dir):
     df1.index = [(j%929)+1 for j in range(0,457068)]
 
     #col 하나 추가해서 time넣어줘야한다
-    timeList = [i for i in range(202,700+1-7)]*929
+    #timeList = [i for i in range(202,700+1-7)]*929
+    timeList = [(i//929)+202 for i in range(0,457068)]
     df1["timestep"] = timeList
 
     #저장
@@ -31,7 +32,8 @@ def mkTestdata(df,dir):
     df1.index = [(j%929)+1 for j in range(0,21367)]
     
     #col 하나 끝에 추가해서 time넣어줘야한다
-    timeList = [i for i in range(701,730+1-7)]*929
+    #timeList = [i for i in range(701,730+1-7)]*929
+    timeList = [(i//929)+701 for i in range(0,21367)]
     df1["timestep"] = timeList
 
     #저장
