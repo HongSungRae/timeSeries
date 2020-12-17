@@ -17,9 +17,9 @@ def train(model,train_loader,test_loader,epoch):
     device = torch.device('cuda' if is_cuda else 'cpu') 
 
     net = model
-    optimizer = optim.SGD(net.parameters(),lr=1e-2)
-    criterion = nn.MSELoss()
-    eps = 1e-6
+    optimizer = optim.SGD(net.parameters(),lr=1e-2,momentum=0.9)
+    criterion = RMSE()
+    #eps = 1e-6
     epochs = epoch
     total_batch = len(train_loader)
     print('total batch :',total_batch)
@@ -39,8 +39,9 @@ def train(model,train_loader,test_loader,epoch):
             
             optimizer.zero_grad()
             y_hat = net(x,factor)
-            y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
-            loss = torch.sqrt(criterion(target, y_hat) + eps)
+            #y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
+            #loss = torch.sqrt(criterion(target, y_hat) + eps)
+            loss = criterion(target,y_hat)
             #loss = predictionLoss(y_hat, target)
             loss.backward()
             optimizer.step()
@@ -69,11 +70,12 @@ def train(model,train_loader,test_loader,epoch):
                             target = target.float().cuda()
                             factor = factor.float().cuda()
                         y_hat = net(x,factor)
-                        loss = predictionLoss(y_hat,target)
-                        loss_test += loss
+                        #loss = predictionLoss(y_hat,target)
+                        loss_ = criterion(target,y_hat)
+                        loss_test += loss_
                         
-                        if j==9:
-                            test_loss_list.append(loss_test.item()/10)
+                        if j==99:
+                            test_loss_list.append(loss_test.item()/100)
                             break
                 break
             

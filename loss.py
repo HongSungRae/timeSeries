@@ -5,6 +5,18 @@ from torch.autograd import Variable
 
 
 
+
+class RMSE(nn.Module):
+    def __init__(self,eps=1e-6):
+        super().__init__()
+        self.eps = eps
+        self.mse = nn.MSELoss()
+    
+    def forward(self,y,y_hat):
+        y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
+        return torch.sqrt(self.mse(y,y_hat)+self.eps)
+
+
 def predictionLoss(y,y_hat):
     y_hat = y_hat.view(y_hat.shape[0],1,1,-1)
     loss = torch.sqrt(torch.mean((y-y_hat)**2))
@@ -43,6 +55,7 @@ def getloss(y,y_hat):
 if __name__ == "__main__":
     y = torch.randn([64,1,1,48])
     y_hat = torch.randn([64,48])
+    
     loss = predictionLoss(y,y_hat)
     print(loss)
     print(loss.shape)
@@ -56,3 +69,10 @@ if __name__ == "__main__":
 
     a = torch.zeros([1,7,7],device='cuda')
     print(a)
+
+    
+    criterion = RMSE()
+    loss = criterion(y,y_hat)
+    print(loss)
+    print(loss.shape)
+    print(loss.requires_grad)
