@@ -12,5 +12,8 @@
 <img src="https://user-images.githubusercontent.com/64223259/104918879-c2be6e00-59d8-11eb-816e-748063cc3564.png">
 <img src="https://user-images.githubusercontent.com/64223259/104918881-c3ef9b00-59d8-11eb-88cf-8ed55ef9d0d2.png">
 
-### - SR. Hong
-### - sr5043@seoultech.ac.kr
+## Notice
+- LSTM모형 활용 같은 task 진행중
+
+#### - SR. Hong
+#### - sr5043@seoultech.ac.kr
