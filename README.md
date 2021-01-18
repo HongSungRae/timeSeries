@@ -12,5 +12,5 @@
 <img src="https://www.notion.so/LoadCNN_Fin-2b2cc1c9bbfc4326b0956be4adc5d4f7#f9bdad8ca73b4fe7ae2322255a170aab">
 <img src="https://www.notion.so/LoadCNN_Fin-2b2cc1c9bbfc4326b0956be4adc5d4f7#b9293f2d04934c3bacba1b934a680be4">
 
-### SR. Hong
-### sr5043@seoultech.ac.kr
+### - SR. Hong
+### - sr5043@seoultech.ac.kr
