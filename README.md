@@ -9,8 +9,8 @@
 - 논문의 최고 performance는 RMSE기준 0.61x (The best performance of paper was 0.61x)
 - 직접 구현한 LoadCNN의 performance는 RMSE기준 0.61<RMSE<0.65
 
-<img src="https://www.notion.so/LoadCNN_Fin-2b2cc1c9bbfc4326b0956be4adc5d4f7#f9bdad8ca73b4fe7ae2322255a170aab">
-<img src="https://www.notion.so/LoadCNN_Fin-2b2cc1c9bbfc4326b0956be4adc5d4f7#b9293f2d04934c3bacba1b934a680be4">
+<img src="https://user-images.githubusercontent.com/64223259/104918879-c2be6e00-59d8-11eb-816e-748063cc3564.png">
+<img src="https://user-images.githubusercontent.com/64223259/104918881-c3ef9b00-59d8-11eb-88cf-8ed55ef9d0d2.png">
 
 ### - SR. Hong
 ### - sr5043@seoultech.ac.kr
