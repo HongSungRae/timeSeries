@@ -31,7 +31,6 @@ class myDataLoader(Dataset):
 
 if __name__ == "__main__":
     df_test = pd.read_csv("/daintlab/data/sr/testdf.csv",index_col=0)
-    print(len(df_test))
     
     test_dataset = myDataLoader(df_test)
     test_loader = DataLoader(test_dataset, shuffle=False, batch_size=64, pin_memory=False)
