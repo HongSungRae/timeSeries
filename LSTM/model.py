@@ -8,12 +8,12 @@ class Model(nn.Module):
         super().__init__()
         self.lstm = nn.LSTM(dropout=.5,**kwargs)
         self.relu = nn.ReLU()
-        self.linear = nn.Linear(48,48)
+        self.linear = nn.Linear(48+125,48)
     
-    def forward(self,x):
+    def forward(self,x,factor):
         x,_ = self.lstm(x)
-        x = self.relu(x) #[929,480,48]
-        #x = torch.cat([x,factor])
+        x = self.relu(x) #[480,336,48]
+        x = torch.cat([x,factor],dim=2)
         x = self.linear(x)
         return x
 
@@ -22,11 +22,10 @@ if __name__=='__main__':
     lstm = Model(
         input_size=48*7,
         hidden_size=48,
-        num_layers=2
+        num_layers=10
     )
     
-    x = torch.randn([929,480,48*7])
-    y = torch.randn([929,480,48])
-    factor = torch.randn([1,5,25])
-    output = lstm(x)
-    print((output-y).shape)
+    x = torch.zeros(929,492,48*7)
+    factor = torch.randn(929,492,125)
+    output = lstm(x,factor)
+    print(output.shape)
