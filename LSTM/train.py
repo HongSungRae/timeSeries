@@ -3,13 +3,14 @@ import torch.optim as optim
 import torch
 import pandas as pd
 import numpy as np
-import os
-import sys
 from dataloader import MyDataLoader
 from torch.utils.data import Dataset, DataLoader
 from model import Model
-sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
-from loss import RMSE
+from loss import RMSEforLSTM
+#import os
+#import sys
+#sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
+#from loss import RMSE
 
 
 def train(model,train_loader,test_loader,epoch):
@@ -18,7 +19,7 @@ def train(model,train_loader,test_loader,epoch):
 
     net = model
     optimizer = optim.SGD(net.parameters(),lr=1e-2)
-    criterion = RMSE()
+    criterion = RMSEforLSTM()
     #eps = 1e-6
     epochs = epoch
     total_batch = len(train_loader)
