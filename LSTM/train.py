@@ -17,7 +17,7 @@ def train(model,train_loader,test_loader,epoch):
     device = torch.device('cuda' if is_cuda else 'cpu') 
 
     net = model
-    optimizer = optim.SGD(net.parameters(),lr=1e-2,momentum=0.9)
+    optimizer = optim.SGD(net.parameters(),lr=1e-2)
     criterion = RMSE()
     #eps = 1e-6
     epochs = epoch
@@ -76,6 +76,7 @@ def train(model,train_loader,test_loader,epoch):
                         
                         if j==99:
                             test_loss_list.append(loss_test.item()/100)
+                            print("test loss : {0}".format(loss_test.item()/100))
                             break
                 break
             
@@ -89,17 +90,17 @@ if __name__=='__main__':
     df_train = pd.read_csv("/daintlab/data/sr/traindf.csv",index_col=0)
 
     train_dataset = MyDataLoader(df_train)
-    train_loader = DataLoader(train_dataset, shuffle=True, batch_size=64, pin_memory=True)
+    train_loader = DataLoader(train_dataset, shuffle=True, batch_size=128, pin_memory=True)
 
     df_test = pd.read_csv("/daintlab/data/sr/testdf.csv",index_col=0)
 
     test_dataset = MyDataLoader(df_test)
-    test_loader = DataLoader(test_dataset, shuffle=True, batch_size=64, pin_memory=True)
+    test_loader = DataLoader(test_dataset, shuffle=True, batch_size=128, pin_memory=True)
 
     lstm = Model(
         input_size=48*7,
-        hidden_size=48,
-        num_layers=5
+        hidden_size=256,
+        num_layers=3
     ).cuda()
     trained_model, train_loss_list, test_loss_list = train(lstm,train_loader,test_loader,10)
 
