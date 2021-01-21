@@ -13,6 +13,7 @@ class RMSEforLSTM(nn.Module):
 
 if __name__ == '__main__':
     torch.manual_seed(1)
+    
     y = torch.randn(64,1,48)
     y_hat = torch.randn(64,1,48)
 
