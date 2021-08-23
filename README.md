@@ -12,8 +12,5 @@
 <img src="https://user-images.githubusercontent.com/64223259/104918879-c2be6e00-59d8-11eb-816e-748063cc3564.png">
 <img src="https://user-images.githubusercontent.com/64223259/104918881-c3ef9b00-59d8-11eb-88cf-8ed55ef9d0d2.png">
 
-## Notice
-- LSTM모형 활용 같은 task 진행중
-
 #### - SR. Hong
 [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2FHongSungRae%2FtimeSeries&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
